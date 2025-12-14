@@ -14,8 +14,16 @@ export const AIAdvisor: React.FC = () => {
     setLoading(true);
     setSuggestion(null);
 
+    // Safety check for API Key
+    const apiKey = process.env.API_KEY;
+    if (!apiKey) {
+      setSuggestion("Demo Mode: API Key is missing. Please add your GEMINI_API_KEY to the deployment environment variables.");
+      setLoading(false);
+      return;
+    }
+
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+      const ai = new GoogleGenAI({ apiKey: apiKey });
       const prompt = `I want to make a custom 3D figurine. The user input is: "${input}". 
       Suggest a creative pose, outfit details, and base design for this figurine. 
       Keep the tone exciting and professional. Limit to 50 words.`;
